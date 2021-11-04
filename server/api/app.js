@@ -1,19 +1,14 @@
 const express = require('express');
-const users = require('./controllers/userController');
-const recipes = require('./controllers/recipesController');
-const auth = require('./middlewares/auth');
-const error = require('./middlewares/error');
-const upload = require('./middlewares/uploadFiles');
-const userRouter = require('./routes/userRouter');
+const { error } = require('./middlewares');
+const { taskRouter, userRouter } = require('./routes');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-// Não remover esse end-point, ele é necessário para o avaliador
-app.get('/', (request, response) => {
-  response.send();
-});
-// Não remover esse end-point, ele é necessário para o avaliador
+app.use(cors());
+
 app.use(userRouter);
+app.use(taskRouter);
 // app.use(express.static(`${__dirname}uploads/`));
 // app.post('/users', users.createUser);
 // app.post('/login', users.login);
