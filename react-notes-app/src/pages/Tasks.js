@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-//import notes from '../assets/data'
 import ListItem from '../components/ListItem';
 import AddButton from '../components/AddButton';
 
-const taskURL = 'http://localhost:3000/task';
+const PORT = process.env.REACT_APP_PORT;
+
+const taskURL = `http://localhost:${PORT}/task`;
 
 const Notes = () => {
   let [notes, setNotes] = useState([]);
@@ -20,20 +21,30 @@ const Notes = () => {
       mode: 'cors',
     });
     let data = await response.json();
+    data = data.sort((a, b) => {
+      if (a.date > b.date) {
+        return 1;
+      }
+      if (a.date < b.date) {
+        return -1;
+      }
+    });
+
+    console.log(data);
     setNotes(data);
   };
 
   return (
     <div className="notes">
       <div className="notes-header">
-        <h2 className="notes-title">&#9782; Your ToDo's</h2>
+        <h2 className="notes-title">&#9782; Lista de Tarefas</h2>
         <p className="notes-count">{notes.length}</p>
       </div>
 
       <div className="notes-list">
-        {notes.map((note, index) => (
-          <ListItem key={index} note={note} />
-        ))}
+        {notes.map((note, index) => {
+          return <ListItem key={index} note={note} />;
+        })}
       </div>
 
       <AddButton />

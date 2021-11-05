@@ -12,8 +12,6 @@ module.exports = async (req, res, next) => {
     req.data = user;
     next();
   } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
+    return next({ error: error.message, code: 401 });
   }
 };

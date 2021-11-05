@@ -35,7 +35,7 @@ const ListItem = ({ note }) => {
   const { _id: id } = note;
 
   return (
-    <Link to={`/note/${id}`}>
+    <Link className="item" to={`/note/${id}`}>
       <div className="notes-list-item">
         <h3>{getTitle(note)}</h3>
         <p>

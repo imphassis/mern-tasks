@@ -1,62 +1,88 @@
 import React, { useEffect, useState } from 'react';
-//import notes from '../assets/data'
+import * as moment from 'moment';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg';
 import { Link } from 'react-router-dom';
 import useLocalStorage from 'use-local-storage';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import ConfirmDelete from './ConfirmDelete';
 
 const user = {
   email: 'erickjacquin@gmail.com',
   password: '12345678',
 };
 
-const Note = ({ match, history }) => {
+const Task = ({ match, history }) => {
   let noteId = match.params.id;
 
   const [task, setTask] = useState(null);
   const [token, setToken] = useLocalStorage('token', null);
   const [startDate, setStartDate] = useState(new Date());
   const [status, setStatus] = useState('');
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     getNote();
     getToken();
   }, [noteId]);
 
-  let getNote = async () => {
+  const getNote = async () => {
     if (noteId === 'new') return;
-    const response = await fetch(`http://127.0.0.1:3000/task/${noteId}`);
-    const data = await response.json();
-    setTask(data);
+
+    await fetch(`http://127.0.0.1:3000/task/${noteId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTask(data);
+        console.log(data);
+        setStartDate(new Date(data.date));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const getToken = async () => {
-    if (token) return;
-    const response = await fetch(`http://127.0.0.1:3000/user/login`, {
+    if (token) {
+      const date = moment(token.timestamp);
+      const now = moment();
+      const diff = date.diff(now, 'hours');
+      if (diff < 1) {
+        return;
+      }
+    }
+    await fetch(`http://127.0.0.1:3000/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
-    });
-    const data = await response.json();
-    setToken(data.token);
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setToken({ token: data.token, timestamp: new Date().getTime() });
+      })
+      .catch((error) => {
+        setStatus(error);
+      });
   };
 
-  const createTask = async (task) => {
-    const response = await fetch(`http://127.0.0.1:3000/task/`, {
+  const createTask = (task) => {
+    fetch(`http://127.0.0.1:3000/task`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
       },
       body: JSON.stringify(task),
-    });
-
-    return response;
+    })
+      .then((response) => response.json().then((data) => console.log(data)))
+      .catch((error) => {
+        console.log(error, 'ERROR');
+        // setStatus(error);
+      });
   };
 
   const updateTask = async (task) => {
@@ -82,6 +108,7 @@ const Note = ({ match, history }) => {
   };
 
   const handleSubmit = async (e) => {
+    console.log(startDate);
     e.preventDefault();
     const formData = new FormData(e.target);
     const title = formData.get('title');
@@ -90,7 +117,7 @@ const Note = ({ match, history }) => {
     const newTask = {
       title,
       description,
-      date,
+      date: startDate,
       completed: false,
     };
     if (noteId !== 'new' && !task.body) return deleteTask();
@@ -104,24 +131,20 @@ const Note = ({ match, history }) => {
     }
   };
 
-  console.log(startDate);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <div className="note">
       <div className="note-header">
         <h3>
           <Link to={'/'}>
-            <ArrowLeft onClick={handleSubmit} />
+            <ArrowLeft />
           </Link>
         </h3>
-        {noteId !== 'new' ? (
-          <button form="task-form" type="submit" onClick={deleteTask}>
-            Delete
-          </button>
-        ) : (
-          <button form="task-form" type="submit">
-            Done
-          </button>
-        )}
+        <Button variant="success" form="task-form" type="submit">
+          Done
+        </Button>
       </div>
       <Form id="task-form" className="m-3" onSubmit={(e) => handleSubmit(e)}>
         <Form.Group className="title-input mb-3">
@@ -152,7 +175,7 @@ const Note = ({ match, history }) => {
           <DatePicker
             className="date-input"
             selected={startDate}
-            // onChange={(date) => setStartDate(date)}
+            onChange={(date) => setStartDate(date)}
             showTimeSelect
             dateFormat="Pp"
             timeFormat="HH:mm"
@@ -161,8 +184,12 @@ const Note = ({ match, history }) => {
         </Form.Group>
       </Form>
       <h1>{status}</h1>
+      <Button variant="danger" form="task-form" onClick={handleShow}>
+        Delete
+      </Button>
+      <ConfirmDelete show={show} onHide={handleClose} onDelete={deleteTask} />
     </div>
   );
 };
 
-export default Note;
+export default Task;

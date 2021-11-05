@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-import './App.css';
+import './App.scss';
 import Header from './components/Header';
-import Notes from './pages/Notes';
-import Note from './pages/Note';
+import Tasks from './pages/Tasks';
+import Task from './pages/Task';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -11,8 +12,9 @@ function App() {
       <div className="container dark">
         <div className="app">
           <Header />
-          <Route path="/" exact component={Notes} />
-          <Route path="/note/:id" component={Note} />
+          <Route path="/" exact component={Login} />
+          <Route path="/tasks" component={Tasks} />
+          <Route path="/note/:id" component={Task} />
         </div>
       </div>
     </Router>
