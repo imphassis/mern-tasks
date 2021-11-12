@@ -2,7 +2,7 @@ const app = require('./app');
 
 const dbo = require('./models/connection');
 
-const PORT = 3000;
+const PORT = 5000;
 
 app.listen(PORT, () => {
   dbo.connectToServer((err) => {

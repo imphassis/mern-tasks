@@ -10,5 +10,16 @@ const errorStatus = {
 module.exports = (err, _req, res, _next) => {
   console.log(err);
   const { error, code } = err;
-  return res.status(code).json({ error });
+
+  if (error && code) {
+    return res.status(code).json(error);
+  }
+
+  if (error && !code) {
+    return res
+      .status(errorStatus[error.message].code)
+      .json(errorStatus[error.message]);
+  }
+
+  return res.status();
 };

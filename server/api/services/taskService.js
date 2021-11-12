@@ -12,16 +12,16 @@ const getAllTasks = async () => {
 
 const getTaskById = async (id) => {
   const response = await taskModel.getTaskById(id);
-  return response || { error: { message: 'recipe not found' } };
+  return response || { error: { message: 'task not found' } };
 };
 
 const updateTask = async ({ id, body }) => {
   try {
-    const checkRecipe = await getRecipeById(id);
+    const checkRecipe = await getTaskById(id);
     const response = await taskModel.updateTask({ id, recipe: body });
     return response ? checkRecipe : null;
   } catch (error) {
-    return { error: { message: 'recipe not found' } };
+    return { error: { message: 'task not found' } };
   }
 };
 

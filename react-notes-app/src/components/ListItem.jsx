@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 let getTime = (note) => {
-  console.log(note.date);
-
   return new Date(note.date).toLocaleDateString();
 };
 

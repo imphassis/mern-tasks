@@ -11,11 +11,11 @@ const createTask = rescue(async (req, res, next) => {
     const { error } = taskSchema.validate(body);
 
     if (error) return next({ error: error.message, code: 400 });
-    const createdRecipe = await taskService.createTask({
+    const createdTask = await taskService.createTask({
       ...body,
       userId,
     });
-    return res.status(201).json({ recipe: { ...createdRecipe } });
+    return res.status(201).json({ recipe: { ...createdTask } });
   } catch (err) {
     return next(err);
   }
@@ -23,9 +23,9 @@ const createTask = rescue(async (req, res, next) => {
 
 const getAllTasks = rescue(async (_req, res, next) => {
   try {
-    const recipes = await taskService.getAllTasks();
-    if (recipes.error) return next({ error: 'InvalidEntries' });
-    return res.status(200).json(recipes);
+    const tasks = await taskService.getAllTasks();
+    if (tasks.error) return next({ error: 'InvalidEntries' });
+    return res.status(200).json(tasks);
   } catch (err) {
     return next(err);
   }
@@ -33,9 +33,9 @@ const getAllTasks = rescue(async (_req, res, next) => {
 
 const getTaskById = rescue(async (req, res, next) => {
   try {
-    const recipe = await taskService.getTaskById(req.params.id);
-    if (recipe.error) return res.status(404).json(recipe.error);
-    return res.status(200).json(recipe);
+    const task = await taskService.getTaskById(req.params.id);
+    if (task.error) return next({ code: 404, error: task.error });
+    return res.status(200).json(task);
   } catch (err) {
     return next(err);
   }
@@ -43,14 +43,16 @@ const getTaskById = rescue(async (req, res, next) => {
 
 const updateTask = rescue(async (req, res, next) => {
   try {
-    const { body, params } = req;
-    const { id } = params;
-    const { error } = recipesSchema.validate(body);
-    if (error) return next({ error: 'InvalidEntries' });
-    const updatedRecipe = await taskService.updateTask({ id, body });
-    if (updatedRecipe.error) return res.status(404).json(updatedRecipe.error);
+    const {
+      body,
+      params: { id },
+    } = req;
 
-    return res.status(200).json({ ...updatedRecipe, ...body });
+    const { error } = taskSchema.validate(body);
+    if (error) return next({ error: 'InvalidEntries' });
+    const updatedTask = await taskService.updateTask({ id, body });
+    if (updatedTask.error) return next({ code: 404, error: updatedTask.error });
+    return res.status(200).json({ ...updatedTask, ...body });
   } catch (err) {
     return next(err);
   }
@@ -59,9 +61,9 @@ const updateTask = rescue(async (req, res, next) => {
 const deleteTask = rescue(async (req, res, next) => {
   try {
     const { id } = req.params;
-    const deletedRecipe = await taskService.deleteTask(id);
-    if (deletedRecipe === 'Ok') return res.status(204).send();
-    if (deletedRecipe.error) return res.status(404).json(deletedRecipe.error);
+    const deletedTask = await taskService.deleteTask(id);
+    if (deletedTask === 'Ok') return res.status(204).send();
+    if (deletedTask.error) return next({ code: 404, error: deletedTask.error });
   } catch (err) {
     return next(err);
   }

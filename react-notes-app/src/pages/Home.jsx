@@ -20,6 +20,7 @@ const Notes = () => {
       },
       mode: 'cors',
     });
+
     let data = await response.json();
     data = data.sort((a, b) => {
       if (a.date > b.date) {
@@ -29,7 +30,6 @@ const Notes = () => {
         return -1;
       }
     });
-
     console.log(data);
     setNotes(data);
   };
