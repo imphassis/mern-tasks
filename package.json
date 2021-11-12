@@ -1,0 +1,22 @@
+{
+  "name": "desafio-tecnico",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "backend": "node server/api/server.js",
+    "start": "cd client && npm start",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imphassis/mern-tasks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imphassis/mern-tasks/issues"
+  },
+  "homepage": "https://github.com/imphassis/mern-tasks#readme"
+}
