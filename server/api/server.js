@@ -10,7 +10,7 @@ const buildPath = path.join(__dirname, '../../client/build');
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(buildPath));
   app.get('*', (req, res) => {
-    res.sendFile('index.html', { buildPath });
+    res.sendFile(buildPath);
   });
 }
 
