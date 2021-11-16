@@ -6,11 +6,6 @@ module.exports = {
   // The version of the application
   version: '1.0.0',
   // The port of the application
-  port: 5000,
-  // The base url of the application
-  baseUrl: 'http://localhost:5000',
-  // The base path of the application
-  basePath: '/api',
 
   // The path of the application
   script: 'server/api/server.js',
@@ -34,3 +29,9 @@ module.exports = {
   exec_mode: 'cluster',
   instances: 'max',
 };
+
+// RUN npm install pm2 -g
+// ENV PM2_PUBLIC_KEY 6cme7x5ca9g16p6
+// ENV PM2_SECRET_KEY p22zaurea8fgylf
+
+// CMD ["pm2-runtime", "app.js"]
