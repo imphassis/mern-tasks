@@ -5,7 +5,7 @@ const path = require('path');
 const dbo = require('./models/connection');
 
 const PORT = process.env.PORT || 5000;
-const buildPath = path.join(__dirname, '../../client/build');
+const buildPath = path.join(__dirname, '../../client/build/index.html');
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(buildPath));
