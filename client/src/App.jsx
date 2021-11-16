@@ -12,8 +12,8 @@ function App() {
       <div className="container dark">
         <div className="app">
           <Header />
-          <Route path="/" exact component={Login} />
-          <Route path="/tasks" component={Home} />
+          <Route exact path="/" component={Home} />
+          <Route path="/login" exact component={Login} />
           <Route path="/note/:id" component={Task} />
         </div>
       </div>

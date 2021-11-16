@@ -1,7 +1,10 @@
+// @ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import useLocalStorage from 'use-local-storage';
+import * as moment from 'moment';
+
+import LoginForm from '../components/LoginForm';
 const URL = process.env.REACT_APP_URL;
 
 const user = {
@@ -12,71 +15,56 @@ const user = {
 export default function Login() {
   const [token, setToken] = useLocalStorage('token', null);
   const [status, setStatus] = useState('');
+  const { info: user, logged } = useSelector((state) => state.user);
 
   useEffect(() => {
     getToken();
   }, []);
 
-  const getToken = useCallback(async () => {
-    // if (token) {
-    //   const date = moment(token.timestamp);
-    //   const now = moment();
-    //   const diff = date.diff(now, 'hours');
-    //   if (diff < 1) {
-    //     return;
-    //   }
-    // }
-    try {
-      if (!token) {
-        const response = await fetch(`${URL}/user/login`, {
+  const NEWURL = 'http://localhost:5000/api';
+  const getToken = async () => {
+    const fetchToken = async () => {
+      try {
+        const response = await fetch(`${NEWURL}/user/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(user),
         });
-
+        console.log('vrau');
         const data = await response.json();
         setToken({ token: data.token, timestamp: new Date().getTime() });
+      } catch (error) {
+        setStatus(error);
       }
-    } catch (error) {
-      setStatus(error);
+    };
+    const diff = () => {
+      if (!token) return false;
+      const date = moment(token.timestamp) || null;
+      const now = moment() || null;
+      // Display the time difference in minutes
+      return moment.duration(now.diff(date)).as('minutes') || null;
+    };
+    if (!token || diff() > 180) {
+      fetchToken();
     }
-  }, []);
+
+    // Display the date when the token was created
+  };
+
+  const helloUser = () => {
+    return logged ? (
+      <div className="alert alert-success" role="alert">
+        Bem vindo {user.email}
+      </div>
+    ) : null;
+  };
 
   return (
-    <Form className="m-3">
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Digite seu e-mail:</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Digite sua senha:</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button
-        className="col-12 mb-3 mb-sm-0"
-        variant="outline-success"
-        type="submit"
-      >
-        Entrar
-      </Button>
-      <Link to="/register">
-        <Button
-          className="col-12 mt-3 mb-sm-0"
-          variant="outline-primary"
-          type="submit"
-        >
-          Novo Usuário
-        </Button>
-      </Link>
-    </Form>
+    <div>
+      <LoginForm />
+      {helloUser()}
+    </div>
   );
 }
