@@ -28,7 +28,6 @@ export default function Login() {
     // }
     try {
       if (!token) {
-        console.log('rau');
         const response = await fetch(`${URL}/user/login`, {
           method: 'POST',
           headers: {
