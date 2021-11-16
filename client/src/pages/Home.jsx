@@ -5,6 +5,7 @@ import AddButton from '../components/AddButton';
 const URL = process.env.REACT_APP_URL;
 
 const taskURL = `${URL}/task`;
+console.log(taskURL);
 
 const Notes = () => {
   let [notes, setNotes] = useState([]);
