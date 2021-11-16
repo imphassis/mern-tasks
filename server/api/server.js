@@ -6,12 +6,11 @@ const dbo = require('./models/connection');
 
 const PORT = process.env.PORT || 5000;
 const buildPath = path.join(__dirname, '../../client/build');
-console.log(buildPath);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('build'));
+  app.use(express.static(buildPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'));
+    res.sendFile('index.html', { buildPath });
   });
 }
 
