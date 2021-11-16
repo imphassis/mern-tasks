@@ -1,6 +1,4 @@
 /server/.env
-/server/authKey.js
-.authKey.js
 **/node_modules
 **/node_modules
 config.env
