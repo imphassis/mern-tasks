@@ -14,6 +14,7 @@
     "node_modules",
     "client/node_modules"
   ],
+  "homepage": "https://tasknotes-5050.herokuapp.com/",
   "keywords": [],
   "author": "",
   "license": "ISC",
