@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ListItem from '../components/ListItem';
 import AddButton from '../components/AddButton';
 
-const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL;
 
-const taskURL = `http://localhost:${PORT}/task`;
+const taskURL = `${URL}/task`;
 
 const Notes = () => {
   let [notes, setNotes] = useState([]);

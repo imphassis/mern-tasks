@@ -7,8 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(userRouter);
-app.use(taskRouter);
+app.use('/api', userRouter);
+app.use('/api', taskRouter);
 
 app.use(error);
 
