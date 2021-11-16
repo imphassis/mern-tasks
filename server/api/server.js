@@ -5,12 +5,12 @@ const path = require('path');
 const dbo = require('./models/connection');
 
 const PORT = process.env.PORT || 5000;
-const buildPath = path.join(__dirname, '../../client/build/index.html');
+const buildPath = path.join(__dirname, '../../client/build');
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(buildPath));
   app.get('*', (req, res) => {
-    res.sendFile(buildPath);
+    res.sendFile(buildPath + '/index.html');
   });
 }
 
