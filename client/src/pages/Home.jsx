@@ -3,9 +3,10 @@ import ListItem from '../components/ListItem';
 import AddButton from '../components/AddButton';
 
 const URL = process.env.REACT_APP_URL;
+const PORT = process.env.REACT_APP_PORT;
 
 const taskURL = `${URL}/task`;
-console.log(taskURL);
+console.log(taskURL, PORT);
 
 const Notes = () => {
   let [notes, setNotes] = useState([]);
