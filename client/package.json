@@ -1,6 +1,7 @@
 {
   "name": "todo1",
   "version": "0.1.0",
+  "homepage": "https://tasknotes-5050.herokuapp.com/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
