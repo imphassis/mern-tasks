@@ -30,7 +30,7 @@ const Notes = () => {
         return -1;
       }
     });
-    console.log(data);
+
     setNotes(data);
   };
 
