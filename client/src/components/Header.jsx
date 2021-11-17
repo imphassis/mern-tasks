@@ -4,27 +4,28 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { logout as logOut, saveUser } from '../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useHistory } from 'react-router';
-import useToken from './useLocalStorage';
 
 const Header = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { pathname } = history.location;
+  const { userData } = useSelector((state) => state.user);
 
-  const [user, setUser] = useToken('');
-  const { info, userData } = useSelector((state) => state.user);
+  const checkUser = useCallback(async () => {
+    if (!userData) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user?.user) {
+        dispatch(saveUser(user.user));
+      }
+    }
+  }, [dispatch, userData]);
 
   useEffect(() => {
-    console.log(pathname);
-    if (pathname !== '/login' && !user) {
-      history.push('/login');
-    }
-  }, [history, pathname, user]);
+    checkUser();
+  }, [checkUser]);
 
   const logout = () => {
-    setUser('');
+    localStorage.removeItem('user');
     dispatch(logOut());
     history.push('/login');
   };
