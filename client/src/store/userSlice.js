@@ -15,6 +15,7 @@ const slice = createSlice({
     },
     logout: (state, action) => {
       state.info = null;
+      state.userData = null;
       state.logged = false;
     },
 
