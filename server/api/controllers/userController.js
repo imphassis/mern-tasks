@@ -16,15 +16,16 @@ const createUser = rescue(async (req, res, next) => {
 });
 
 const login = rescue(async (req, res, next) => {
+  const { error } = loginSchema.validate(req.body);
+  if (error) return next({ error: 'AllFieldsRequired', code: 401 });
   const { email, password } = req.body;
-  const { error } = loginSchema.validate({ email, password });
-  if (error) return next({ error: 'AllFieldsRequired' });
   const user = await userService.loginUser({ email, password });
+
   if (user.error) return next(user);
   const { _id, role } = user;
   const data = { id: _id, email, role };
   const token = jwt.sign(data, authKey, jtwConfig);
-  return res.status(200).json({ token });
+  return res.status(200).json({ token, user });
 });
 
 module.exports = {

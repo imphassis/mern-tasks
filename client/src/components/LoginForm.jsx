@@ -1,12 +1,11 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { login } from '../store/userSlice';
 import { useDispatch } from 'react-redux';
 
 export default function LoginForm() {
-  const [user, setUser] = useState({ username: '', password: '' });
   const dispatch = useDispatch();
 
   const submitForm = (e) => {
@@ -15,14 +14,8 @@ export default function LoginForm() {
     const data = new FormData(form);
     const email = data.get('email');
     const password = data.get('password');
-    const user = {
-      email,
-      password,
-    };
 
     dispatch(login({ email, password }));
-
-    // setUser({ email, password });
   };
 
   return (

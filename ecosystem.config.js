@@ -5,7 +5,6 @@ module.exports = {
   description: 'TaskAPI',
   // The version of the application
   version: '1.0.0',
-  // The port of the application
 
   // The path of the application
   script: 'server/api/server.js',
@@ -19,7 +18,7 @@ module.exports = {
     NODE_ENV: 'test',
   },
 
-  max_memory_restart: '60M',
+  max_memory_restart: '1G',
   restart_delay: 100,
   exp_backoff_restart_delay: 100,
 
@@ -27,7 +26,7 @@ module.exports = {
   watch: './',
 
   exec_mode: 'cluster',
-  instances: 'max',
+  instances: '1',
 };
 
 // RUN npm install pm2 -g

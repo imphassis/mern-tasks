@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg';
 import { Link } from 'react-router-dom';
-import useLocalStorage from 'use-local-storage';
+import useLocalStorage from 'use-local-storage-state';
 import { Button } from 'react-bootstrap';
 import * as moment from 'moment';
 
