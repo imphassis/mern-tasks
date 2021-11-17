@@ -6,6 +6,7 @@ const slice = createSlice({
   initialState: {
     logged: false,
     info: null,
+    userData: null,
   },
   reducers: {
     login: (state, action) => {
@@ -16,8 +17,12 @@ const slice = createSlice({
       state.info = null;
       state.logged = false;
     },
+
+    saveUser: (state, action) => {
+      state.userData = action.payload;
+    },
   },
 });
 export default slice.reducer;
 // Actions
-export const { login, logout } = slice.actions;
+export const { login, logout, saveUser } = slice.actions;

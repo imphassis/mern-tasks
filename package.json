@@ -6,6 +6,7 @@
     "node": "14.x"
   },
   "scripts": {
+    "start:dev": "nodemon server/api/server.js",
     "start": "pm2-runtime start ecosystem.config.js",
     "client": "cd client && npm start",
     "build": "cd client/ && npm install && npm run build"

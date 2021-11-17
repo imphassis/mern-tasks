@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ListItem from '../components/ListItem';
 import AddButton from '../components/AddButton';
 import { useHistory } from 'react-router';
-import useLocalStorage from 'use-local-storage';
+import useLocalStorage from 'use-local-storage-state';
 
 const URL = process.env.REACT_APP_URL;
 
