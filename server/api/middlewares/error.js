@@ -8,7 +8,6 @@ const errorStatus = {
 };
 
 module.exports = (err, _req, res, _next) => {
-  console.log(err);
   const { error, code } = err;
 
   if (error && code) {

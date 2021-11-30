@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg';
 import { Link } from 'react-router-dom';
-import useLocalStorage from 'use-local-storage';
+import useLocalStorage from 'use-local-storage-state';
 import { Button } from 'react-bootstrap';
 import * as moment from 'moment';
 
@@ -39,14 +39,13 @@ const Task = ({ match, history }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token,
+        Authorization: token.token,
       },
       body: JSON.stringify(task),
     })
       .then((response) => response.json().then((data) => console.log(data)))
       .catch((error) => {
         console.log(error, 'ERROR');
-        // setStatus(error);
       });
   };
 
@@ -100,10 +99,10 @@ const Task = ({ match, history }) => {
     // if (noteId !== 'new' && !task.body) return deleteTask();
     if (noteId !== 'new') return updateTask(newTask);
     if (noteId === 'new' && task !== null) {
-      await createTask(newTask);
+      createTask(newTask);
       setStatus('Task created successfully');
       return setTimeout(() => {
-        history.push('/');
+        // history.push('/');
       }, 2000);
     }
   };

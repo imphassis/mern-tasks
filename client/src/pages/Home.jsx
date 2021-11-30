@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import ListItem from '../components/ListItem';
 import AddButton from '../components/AddButton';
+import { useHistory } from 'react-router';
+import useLocalStorage from 'use-local-storage-state';
 
-const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL;
 
-const taskURL = `http://localhost:${PORT}/task`;
+const taskURL = `${URL}/task`;
 
 const Notes = () => {
-  let [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState([]);
+  // const [token, setToken] = useLocalStorage('token', null);
+  const history = useHistory();
 
   useEffect(() => {
+    // checkUser();
     getNotes();
   }, []);
 
-  let getNotes = async () => {
-    let response = await fetch(taskURL, {
+  // const checkUser = () => {
+  //   if (token) {
+  //     return true;
+  //   }
+  //   history.push('/login');
+  // };
+
+  const getNotes = async () => {
+    const response = await fetch(taskURL, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -30,7 +42,7 @@ const Notes = () => {
         return -1;
       }
     });
-    console.log(data);
+
     setNotes(data);
   };
 

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
 
 import './App.scss';
 import Header from './components/Header';
@@ -12,9 +13,9 @@ function App() {
       <div className="container dark">
         <div className="app">
           <Header />
-          <Route path="/" exact component={Login} />
-          <Route path="/tasks" component={Home} />
-          <Route path="/note/:id" component={Task} />
+          <PrivateRoute exact path="/" component={Home} />
+          <Route path="/login" exact component={Login} />
+          <PrivateRoute path="/note/:id" component={Task} />
         </div>
       </div>
     </Router>

@@ -7,9 +7,11 @@ module.exports = async (req, res, next) => {
     const token = req.headers.authorization;
     if (!token) return res.status(401).json({ message: 'missing auth token' });
     const decoded = jwt.verify(token, authKey);
+
     const user = await userModel.findByEmail(decoded.email);
     if (!user) return res.status(401).json({ message: 'Unauthorized' });
     req.data = user;
+
     next();
   } catch (error) {
     return next({ error: error.message, code: 401 });

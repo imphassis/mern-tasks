@@ -1,83 +1,86 @@
+// @ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import useLocalStorage from 'use-local-storage';
+import { useSelector, useDispatch } from 'react-redux';
+import * as moment from 'moment';
+import { useHistory } from 'react-router-dom';
+import LoginForm from '../components/LoginForm';
+import { saveUser } from '../store/userSlice';
+import useToken from '../components/useLocalStorage';
+
 const URL = process.env.REACT_APP_URL;
 
-const user = {
-  email: 'erickjacquin@gmail.com',
-  password: '12345678',
-};
+// const user = {
+//   email: 'erickjacquin@gmail.com',
+//   password: '12345678',
+// };
 
 export default function Login() {
-  const [token, setToken] = useLocalStorage('token', null);
+  const [user, setUser] = useToken('');
   const [status, setStatus] = useState('');
+  const { info, logged } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const getToken = useCallback(async () => {
+    const fetchToken = async () => {
+      if (info) {
+        try {
+          const response = await fetch(`${URL}/user/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(info),
+          });
+
+          const data = await response.json();
+          setUser({
+            token: data.token,
+            timestamp: new Date().getTime(),
+            user: data.user,
+          });
+          dispatch(saveUser(data.user));
+        } catch (error) {
+          setStatus(error);
+        }
+      }
+    };
+
+    const diff = () => {
+      if (!user) return false;
+      const date = moment(user.timestamp) || null;
+      const now = moment() || null;
+      // Display the time difference in minutes
+      return moment.duration(now.diff(date)).as('minutes') || null;
+    };
+    if (!user || diff() > 180) {
+      fetchToken();
+    }
+  }, [dispatch, info, setUser, user]);
+
+  const checkUser = useCallback(() => {
+    if (logged) {
+      setStatus(user?.user?.name);
+      setTimeout(() => {
+        setStatus(null);
+        history.push('/');
+      }, 3000);
+    }
+  }, [history, logged, user?.user?.name]);
 
   useEffect(() => {
     getToken();
-  }, []);
-
-  const getToken = useCallback(async () => {
-    // if (token) {
-    //   const date = moment(token.timestamp);
-    //   const now = moment();
-    //   const diff = date.diff(now, 'hours');
-    //   if (diff < 1) {
-    //     return;
-    //   }
-    // }
-    try {
-      if (!token) {
-        console.log('rau');
-        const response = await fetch(`${URL}/user/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(user),
-        });
-
-        const data = await response.json();
-        setToken({ token: data.token, timestamp: new Date().getTime() });
-      }
-    } catch (error) {
-      setStatus(error);
-    }
-  }, []);
+    checkUser();
+  }, [checkUser, getToken]);
 
   return (
-    <Form className="m-3">
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Digite seu e-mail:</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Digite sua senha:</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button
-        className="col-12 mb-3 mb-sm-0"
-        variant="outline-success"
-        type="submit"
-      >
-        Entrar
-      </Button>
-      <Link to="/register">
-        <Button
-          className="col-12 mt-3 mb-sm-0"
-          variant="outline-primary"
-          type="submit"
-        >
-          Novo Usuário
-        </Button>
-      </Link>
-    </Form>
+    <div>
+      <LoginForm />
+      {status && (
+        <div className="alert alert-success" role="alert">
+          <h1>Bem vindo {status}</h1>
+        </div>
+      )}
+    </div>
   );
 }
